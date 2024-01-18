@@ -1,0 +1,10 @@
+exporter = "otlp"
+processor = "batch"
+
+[exporters.otlp]
+# Exporter URL set with OTEL_EXPORTER_OTLP_ENDPOINT environment variable.
+
+[processors.batch]
+
+[service]
+name = "nginx"

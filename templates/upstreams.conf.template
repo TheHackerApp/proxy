@@ -1,0 +1,11 @@
+upstream events {
+  server $NGINX_UPSTREAM_EVENTS;
+}
+
+upstream identity {
+  server $NGINX_UPSTREAM_IDENTITY;
+}
+
+upstream router {
+  server $NGINX_UPSTREAM_ROUTER;
+}

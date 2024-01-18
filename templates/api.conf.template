@@ -1,0 +1,31 @@
+server {
+  listen 80;
+  server_name $API_DOMAIN;
+
+  include snippets.d/auth/user.conf;
+  include snippets.d/auth/scope.conf;
+
+  location = /graphql {
+    include snippets.d/opentelemetry/propagate.conf;
+    include snippets.d/opentelemetry/proxy.conf;
+
+    access_by_lua_file lua/auth/graphql.lua;
+
+    proxy_pass http://router;
+    include snippets.d/proxy.conf;
+  }
+
+  location /oauth {
+    include snippets.d/opentelemetry/propagate.conf;
+    include snippets.d/opentelemetry/proxy.conf;
+
+    access_by_lua_file lua/auth/oauth.lua;
+
+    proxy_pass http://identity;
+    include snippets.d/proxy.conf;
+  }
+
+  location / {
+    include snippets.d/not-found.conf;
+  }
+}
