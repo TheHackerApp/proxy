@@ -1,0 +1,12 @@
+diff --git a/api/include/opentelemetry/trace/propagation/detail/hex.h b/api/include/opentelemetry/trace/propagation/detail/hex.h
+index c8bd58f8..157f5ec4 100644
+--- a/api/include/opentelemetry/trace/propagation/detail/hex.h
++++ b/api/include/opentelemetry/trace/propagation/detail/hex.h
+@@ -4,6 +4,7 @@
+ #pragma once
+ 
+ #include <algorithm>
++#include <cstdint>
+ #include <cstring>
+ 
+ #include "opentelemetry/nostd/string_view.h"
