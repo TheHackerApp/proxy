@@ -1,0 +1,8 @@
+{
+  "recommendations": [
+    "sumneko.lua",
+    "ms-azuretools.vscode-docker",
+    "skellock.just",
+    "DavidAnson.vscode-markdownlint",
+  ]
+}
