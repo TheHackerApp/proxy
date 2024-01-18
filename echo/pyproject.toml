@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "echo"
+version = "0.1.0"
+description = "A simple HTTP server that responds with the request data"
+authors = []
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+Flask = "^3"
+gunicorn = "^21.2"
+opentelemetry-instrumentation-flask = "^0.43b0"
+opentelemetry-api = "^1.22.0"
+opentelemetry-sdk = "^1.22.0"
+opentelemetry-exporter-otlp-proto-http = "^1.22.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
