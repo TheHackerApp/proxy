@@ -37,21 +37,21 @@ if session == nil then
 end
 
 if session.kind == "unauthenticated" then
-  ngx.header["User-Session"] = "unauthenticated"
+  ngx.header["user-session"] = "unauthenticated"
 elseif session.kind == "registration-needed" then
-  ngx.header["User-Session"] = "registration-needed"
+  ngx.header["user-session"] = "registration-needed"
 elseif session.kind == "oauth" then
-  ngx.header["User-Session"] = "oauth"
-  ngx.header["OAuth-Provider-Slug"] = session.provider
-  ngx.header["OAuth-User-Id"] = session.id
-  ngx.header["OAuth-User-Email"] = session.email
+  ngx.header["user-session"] = "oauth"
+  ngx.header["oauth-provider-slug"] = session.provider
+  ngx.header["oauth-user-id"] = session.id
+  ngx.header["oauth-user-email"] = session.email
 elseif session.kind == "authenticated" then
-  ngx.header["User-Session"] = "authenticated"
-  ngx.header["User-Id"] = session.id
-  ngx.header["User-Given-Name"] = session.given_name
-  ngx.header["User-Family-Name"] = session.family_name
-  ngx.header["User-Email"] = session.email
-  ngx.header["User-Is-Admin"] = tostring(session.admin)
+  ngx.header["user-session"] = "authenticated"
+  ngx.header["user-id"] = session.id
+  ngx.header["user-given-name"] = session.given_name
+  ngx.header["user-Family-name"] = session.family_name
+  ngx.header["user-email"] = session.email
+  ngx.header["user-is-admin"] = tostring(session.admin)
 else
   return responses.fatal("invalid session configuration for token: " .. args.token)
 end

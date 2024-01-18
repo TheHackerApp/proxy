@@ -50,12 +50,12 @@ local function get_event_slug(args)
 end
 
 local function add_scope_type(type)
-  ngx.header["Request-Scope"] = type
+  ngx.header["request-scope"] = type
 end
 
 local function add_event_headers(slug, organization_id)
-  ngx.header["Event-Slug"] = slug
-  ngx.header["Event-Organization-Id"] = tostring(organization_id)
+  ngx.header["event-slug"] = slug
+  ngx.header["event-organization-id"] = tostring(organization_id)
 end
 
 local args, err = ngx.req.get_uri_args()
