@@ -154,3 +154,6 @@ luac.out
 
 # Ignore code-workspaces
 *.code-workspace
+
+### Project files ###
+.env

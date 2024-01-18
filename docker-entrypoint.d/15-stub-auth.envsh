@@ -1,0 +1,23 @@
+#!/bin/sh
+# vim:sw=2:ts=2:sts=2:et
+
+set -eu
+
+LC_ALL=C
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+SELF=$(basename "$0")
+entrypoint_log() {
+  if [ -z "${ENTRYPOINT_QUIET:-}" ]; then
+    echo "$SELF:" "$@"
+  fi
+}
+
+if [ "${DEVELOPMENT_STUB_AUTHENTICATION:-}" = "1" ]; then
+  NGINX_AUTH_PREFIX="stubs/"
+  entrypoint_log "Stubbing authentication flow"
+else
+  NGINX_AUTH_PREFIX=""
+fi
+
+export NGINX_AUTH_PREFIX

@@ -9,6 +9,7 @@ services:
         - JOBS=4
     environment:
       - API_DOMAIN=api.thehacker.int
+      - DEVELOPMENT_STUB_AUTHENTICATION=${DEVELOPMENT_STUB_AUTHENTICATION:-0}
       - NGINX_UPSTREAM_EVENTS=host.docker.internal:4238
       - NGINX_UPSTREAM_IDENTITY=host.docker.internal:4243
       - NGINX_UPSTREAM_ROUTER=echo:8000
