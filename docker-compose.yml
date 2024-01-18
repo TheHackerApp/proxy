@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  proxy:
+    build:
+      context: .
+      target: develop
+      args:
+        - JOBS=4
+    environment:
+      - API_DOMAIN=api.thehacker.int
+      - NGINX_UPSTREAM_EVENTS=host.docker.internal:4238
+      - NGINX_UPSTREAM_IDENTITY=host.docker.internal:4243
+      - NGINX_UPSTREAM_ROUTER=echo:8000
+      - OTEL_EXPORTER_OTLP_ENDPOINT=jaeger:4317
+      - OTEL_EXPORTER_OTLP_ENDPOINT_LUA=jaeger:4318
+    volumes:
+      # Server configuration
+      - type: bind
+        source: ./nginx.conf
+        target: /usr/local/openresty/nginx/conf/nginx.conf
+        consistency: cached
+      - type: bind
+        source: ./opentelemetry.toml
+        target: /usr/local/openresty/nginx/conf/opentelemetry.toml
+        consistency: cached
+      - type: bind
+        source: ./conf
+        target: /usr/local/openresty/nginx/conf/conf.d
+        consistency: cached
+      - type: bind
+        source: ./templates
+        target: /usr/local/openresty/nginx/templates
+        consistency: cached
+
+      # Lua scripts
+      - type: bind
+        source: ./lua
+        target: /usr/local/openresty/nginx/lua
+        consistency: cached
+
+      # Common configuraiton snippets
+      - type: bind
+        source: ./snippets
+        target: /usr/local/openresty/nginx/conf/snippets.d
+        consistency: cached
+    networks:
+      - default
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  echo:
+    build:
+      context: ./echo
+      target: runtime
+    environment:
+      - OTEL_SERVICE_NAME=echo
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_INSTRUMENTATION_HTTP_CAPTURE_HEADERS_SERVER_REQUEST=.*
+      - OTEL_INSTRUMENTATION_HTTP_CAPTURE_HEADERS_SERVER_RESPONSE=.*
+    networks:
+      - default
+
+  jaeger:
+    image: jaegertracing/all-in-one:1.48
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    networks:
+      - default
+    ports:
+      - "7753:16686"
+      - "7717:4317"
+      - "7718:4318"
+
+networks:
+  default:
