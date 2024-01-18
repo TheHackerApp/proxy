@@ -1,0 +1,54 @@
+name: Lint
+
+on: [push]
+
+jobs:
+  luacheck:
+    name: Luacheck
+    runs-on: ubuntu-latest
+    env:
+      LUA_VERSION: 5.4.6
+      LUAROCKS_VERSION: 3.9.2
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Lua
+        run: |
+          curl -R -o /tmp/lua.tar.gz https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz
+          tar -C /tmp -zxf /tmp/lua.tar.gz
+          cd /tmp/lua-${LUA_VERSION}
+          make linux test
+          sudo make install
+      - name: Install Luarocks
+        run: |
+          curl -R -o /tmp/luarocks.tar.gz https://luarocks.github.io/luarocks/releases/luarocks-${LUAROCKS_VERSION}.tar.gz
+          tar -C /tmp -zxf /tmp/luarocks.tar.gz
+          ls /tmp
+          cd /tmp/luarocks-${LUAROCKS_VERSION}
+          ./configure --with-lua-include=/usr/local/include --sysconfdir=/etc
+          make
+          sudo make install
+      - name: Run luarocks install luacheck
+        run: sudo luarocks install luacheck
+
+      - run: luacheck .
+
+  markdownlint:
+    name: markdownlint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DavidAnson/markdownlint-cli2-action@v15
+        with:
+          globs: |
+            **/*.md
+            !echo/.venv
+
+  shellcheck:
+    name: ShellCheck
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: shellcheck -x *.sh
+        run: find . -type f -name "*.sh" -exec shellcheck -x {} \;
+
