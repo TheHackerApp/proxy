@@ -43,13 +43,14 @@ RUN apk add --no-cache \
     unzip \
     zlib-dev
 
-COPY patches /patches
+COPY hack /hack
 
 # Build & install OpenTelemetry C++ SDK
 RUN set -x && \
+    source /hack/clean-otel-env-vars.sh && \
     git clone --recurse-submodules -b ${OPENTELEMETRY_CPP_VERSION} https://github.com/open-telemetry/opentelemetry-cpp.git && \
     cd opentelemetry-cpp && \
-    git apply /patches/opentelemetry-cpp/*.patch && \
+    git apply /hack/patches/opentelemetry-cpp/*.patch && \
     mkdir build && \
     cd build && \
     cmake .. \
@@ -60,7 +61,7 @@ RUN set -x && \
     -DWITH_ABSEIL=ON \
     && \
     cmake --build . --target all -j ${JOBS} && \
-    ctest && \
+    ctest -j ${JOBS} --output-on-failure && \
     cmake --install . && \
     cd / && \
     rm -rf opentelemetry-cpp
