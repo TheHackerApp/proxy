@@ -13,7 +13,10 @@ entrypoint_log() {
   fi
 }
 
-[ "${NGINX_AUTOTUNE_WORKER_PROCESSES:-}" ] || exit 0
+if [ "${NGINX_AUTOTUNE_WORKER_PROCESSES:-}" != "1" ]; then
+  entrypoint_log "Skipping worker process autotuning"
+  return 0
+fi
 
 server_config="${NGINX_SERVER_CONFIG:-/usr/local/openresty/nginx/conf/nginx.conf}"
 
