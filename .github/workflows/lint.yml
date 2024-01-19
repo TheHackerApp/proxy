@@ -1,6 +1,8 @@
+---
 name: Lint
 
-on: [push]
+on:  # yamllint disable-line rule:truthy
+  - push
 
 jobs:
   luacheck:
@@ -11,7 +13,7 @@ jobs:
       LUAROCKS_VERSION: 3.9.2
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Install Lua
         run: |
           curl -R -o /tmp/lua.tar.gz https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz
@@ -52,3 +54,11 @@ jobs:
       - name: shellcheck -x *.sh
         run: find . -type f -name "*.sh" -exec shellcheck -x {} \;
 
+  yamllint:
+    name: YAMLLint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install yamllint
+
+      - run: yamllint -s -f github .

@@ -19,6 +19,7 @@ check:
   find . -type f -name "*.sh" -exec shellcheck -x {} \;
   luacheck .
   markdownlint-cli2 "**/*.md" "#echo/.venv"
+  yamllint -s .
 
 # Get the IP of the proxy container
 ip:
