@@ -1,2 +1,2 @@
 # Override the DNS resolver
-resolver ${NGINX_LOCAL_RESOLVERS};
+resolver ${NGINX_LOCAL_RESOLVERS} valid=30s;
