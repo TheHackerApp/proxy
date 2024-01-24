@@ -6,7 +6,7 @@ local _M = {}
 ---@param message string
 ---@return string
 local function format_message(message)
-  return json.encode({ message = message })
+  return json.encode({ errors = { { message = message } } })
 end
 
 ---Send an empty successful response
