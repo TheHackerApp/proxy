@@ -2,8 +2,7 @@ server {
   listen 80;
   server_name $API_DOMAIN;
 
-  include snippets.d/${NGINX_AUTH_PREFIX}auth/user.conf;
-  include snippets.d/${NGINX_AUTH_PREFIX}auth/scope.conf;
+  include snippets.d/${NGINX_AUTH_PREFIX}auth.conf;
 
   location = /graphql {
     include snippets.d/opentelemetry/propagate.conf;

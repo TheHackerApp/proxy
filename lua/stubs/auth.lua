@@ -10,8 +10,33 @@ local CUSTOM_DOMAINS = {
   ["wafflehacks.org"] = "wafflehacks",
   ["2020.wafflehacks.org"] = "wafflehacks-2020",
 }
+local SESSIONS = {
+  admin = {
+    kind = "authenticated",
+    id = "1",
+    given_name = "Alex",
+    family_name = "Krantz",
+    email = "alex@krantz.dev",
+    admin = true,
+  },
+  user = {
+    kind = "authenticated",
+    id = "2",
+    given_name = "James",
+    family_name = "Smith",
+    email = "james.smith@gmail.com",
+    admin = false,
+  },
+  registering = { kind = "registration-needed" },
+  authenticating = {
+    kind = "oauth",
+    provider = "google",
+    id = "123456789",
+    email = "test@user.com",
+  },
+}
 
----@param args table
+--@param args table
 ---@return string
 local function determine_scope(args)
   local domain = args.domain
@@ -69,7 +94,7 @@ add_scope_type(scope)
 if scope == "event" then
   local slug = get_event_slug(args)
   if slug == nil then
-    return responses.error("not found", ngx.HTTP_NOT_FOUND)
+    return responses.error("unknown event", 422)
   end
 
   local organization_id = EVENTS[slug]
@@ -80,11 +105,36 @@ if scope == "event" then
         .. "` from domain `" .. args.domain .. "`"
       )
     else
-      return responses.error("not found", ngx.HTTP_NOT_FOUND)
+      return responses.error("unknown event", 422)
     end
   end
 
   add_event_headers(slug, organization_id)
+end
+
+local session = SESSIONS[args.token]
+if session == nil then
+  return responses.error("invalid token", ngx.HTTP_UNAUTHORIZED)
+end
+
+if session.kind == "unauthenticated" then
+  ngx.header["user-session"] = "unauthenticated"
+elseif session.kind == "registration-needed" then
+  ngx.header["user-session"] = "registration-needed"
+elseif session.kind == "oauth" then
+  ngx.header["user-session"] = "oauth"
+  ngx.header["oauth-provider-slug"] = session.provider
+  ngx.header["oauth-user-id"] = session.id
+  ngx.header["oauth-user-email"] = session.email
+elseif session.kind == "authenticated" then
+  ngx.header["user-session"] = "authenticated"
+  ngx.header["user-id"] = session.id
+  ngx.header["user-given-name"] = session.given_name
+  ngx.header["user-Family-name"] = session.family_name
+  ngx.header["user-email"] = session.email
+  ngx.header["user-is-admin"] = tostring(session.admin)
+else
+  return responses.fatal("invalid session configuration for token: " .. args.token)
 end
 
 responses.empty()
