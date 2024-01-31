@@ -17,6 +17,7 @@ local SESSIONS = {
     given_name = "Alex",
     family_name = "Krantz",
     email = "alex@krantz.dev",
+    role = "director",
     admin = true,
   },
   user = {
@@ -25,6 +26,7 @@ local SESSIONS = {
     given_name = "James",
     family_name = "Smith",
     email = "james.smith@gmail.com",
+    role = "participant",
     admin = false,
   },
   registering = { kind = "registration-needed" },

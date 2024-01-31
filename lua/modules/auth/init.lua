@@ -10,12 +10,16 @@ local FORWARDED_HEADERS = {
   --event headers
   "event-slug", "event-organization-id",
   --authenticated headers
-  "user-id", "user-given-name", "user-family-name", "user-email", "user-is-admin",
+  "user-id", "user-given-name", "user-family-name", "user-email", "user-role", "user-is-admin",
   --oauth headers
   "oauth-provider-slug", "oauth-user-id", "oauth-user-email",
 }
 
 local _M = {
+  ROLE_DIRECTOR = "director",
+  ROLE_MANAGER = "manager",
+  ROLE_ORGANIZER = "organizer",
+  ROLE_PARTICIPANT = "participant",
   SCOPE_ADMIN = "admin",
   SCOPE_USER = "user",
   SCOPE_EVENT = "event",

@@ -20,6 +20,7 @@ local _M = {}
 ---@field given_name string
 ---@field family_name string
 ---@field email string
+---@field role string|nil
 ---@field admin boolean
 
 ---Get the oauth details from the request headers
@@ -66,6 +67,7 @@ local function get_user_details(session, h)
     given_name = headers.get_first(h, "user-given-name"),
     family_name = headers.get_first(h, "user-family-name"),
     email = headers.get_first(h, "user-email"),
+    role = headers.get_first(h, "user-role"),
     admin = headers.get_first(h, "user-is-admin") == "true",
   }
 end
